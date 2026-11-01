@@ -1,0 +1,495 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Meta Instagram Graph API Integration for Recommendation-Ranked Social Feed Studio.">
+  <title>Instagram Integration | Recommendation Studio</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/instagram.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">⚡</div>
+        <div class="sidebar-brand">
+          <h1>RecStudio</h1>
+          <span>Algorithm Studio</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="instagram.html" class="nav-item active">
+          <span class="nav-icon">📸</span>
+          <span>Instagram API</span>
+        </a>
+        <a href="feed.html" class="nav-item">
+          <span class="nav-icon">📰</span>
+          <span>Social Feed</span>
+        </a>
+        <a href="algorithm-studio.html" class="nav-item">
+          <span class="nav-icon">🎛️</span>
+          <span>Algorithm Studio</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <span class="nav-icon">📈</span>
+          <span>Analytics</span>
+        </a>
+        <a href="explore.html" class="nav-item">
+          <span class="nav-icon">🧭</span>
+          <span>Explore</span>
+        </a>
+        <a href="saved-posts.html" class="nav-item">
+          <span class="nav-icon">🔖</span>
+          <span>Saved Posts</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <span class="nav-icon">👤</span>
+          <span>My Profile</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <span class="nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="profile.html" class="user-mini-profile">
+          <img src="" alt="Avatar" class="avatar-sm auth-user-avatar">
+          <div class="user-mini-meta">
+            <strong class="auth-user-name">Loading...</strong>
+            <span>View profile</span>
+          </div>
+        </a>
+        <button type="button" class="btn-icon" id="btn-sidebar-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+      <header class="app-header">
+        <div class="header-left">
+          <h2 class="page-title">Meta Instagram Graph API Integration</h2>
+        </div>
+
+        <div class="header-actions">
+          <div class="notif-wrapper" id="navbar-notif-container">
+            <button type="button" class="btn-notif-bell" id="btn-toggle-notifs" aria-label="Notifications">
+              🔔
+              <span class="notif-badge" id="navbar-notif-badge" style="display: none;">0</span>
+            </button>
+            <div class="notif-dropdown" id="navbar-notif-dropdown">
+              <div class="notif-header">
+                <span>Notifications</span>
+                <button type="button" class="btn btn-xs btn-outline" id="btn-mark-all-read">Mark all read</button>
+              </div>
+              <div class="notif-list" id="navbar-notif-list">
+                <div class="notif-empty">No notifications yet</div>
+              </div>
+            </div>
+          </div>
+          <a href="feed.html" class="btn btn-primary btn-sm">View Ranked Feed</a>
+        </div>
+      </header>
+
+      <main class="instagram-container">
+        <!-- Error Banner from OAuth Redirect -->
+        <div id="ig-error-container" style="display: none;">
+          <div class="ig-error-banner">
+            <span>⚠️</span>
+            <div>
+              <strong>Instagram Connection Error</strong>
+              <p id="ig-error-text" style="margin-top: 0.25rem; font-size: 0.85rem;"></p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Connection Status Card -->
+        <div class="ig-status-card">
+          <div class="ig-status-header">
+            <div class="ig-account-meta">
+              <div class="ig-avatar-badge">
+                <img id="ig-user-avatar" src="https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80" alt="Instagram Profile" class="ig-avatar-img">
+              </div>
+              <div class="ig-user-details">
+                <h3 id="ig-user-title">
+                  <span id="ig-username-display">Not Connected</span>
+                  <span class="ig-account-type-badge" id="ig-account-type-display">NO ACCOUNT</span>
+                </h3>
+                <span class="ig-status-pill disconnected" id="ig-status-badge">
+                  <span class="pulse-dot"></span> Disconnected
+                </span>
+              </div>
+            </div>
+
+            <!-- Action Controls -->
+            <div class="ig-actions-row">
+              <button type="button" class="btn btn-instagram-connect" id="btn-connect-instagram">
+                📸 Connect Instagram
+              </button>
+              <button type="button" class="btn btn-outline" id="btn-sync-instagram" style="display: none;">
+                🔄 Sync Now
+              </button>
+              <button type="button" class="btn btn-danger" id="btn-disconnect-instagram" style="display: none;">
+                Disconnect
+              </button>
+            </div>
+          </div>
+
+          <!-- Real Instagram Metrics from Database -->
+          <div class="ig-stats-grid">
+            <div class="ig-stat-item">
+              <span class="ig-stat-num" id="stat-ig-posts-count">0</span>
+              <span class="ig-stat-label">Imported Posts</span>
+            </div>
+            <div class="ig-stat-item">
+              <span class="ig-stat-num" id="stat-ig-total-likes">0</span>
+              <span class="ig-stat-label">Total Real Likes</span>
+            </div>
+            <div class="ig-stat-item">
+              <span class="ig-stat-num" id="stat-ig-total-comments">0</span>
+              <span class="ig-stat-label">Total Real Comments</span>
+            </div>
+            <div class="ig-stat-item">
+              <span class="ig-stat-num" id="stat-ig-last-sync">Never</span>
+              <span class="ig-stat-label">Last Synchronized</span>
+            </div>
+          </div>
+
+          <div style="font-size: 0.8rem; color: var(--text-muted); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.5rem;">
+            <span>API Version: <strong>Meta Instagram Graph API v21.0</strong></span>
+            <span id="ig-token-expiry-label">Token: Not connected</span>
+          </div>
+        </div>
+
+        <!-- Real Imported Media Stream -->
+        <section style="margin-bottom: 3rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+            <div>
+              <h3 style="font-size: 1.25rem; font-weight: 800;">Real Imported Instagram Media</h3>
+              <p style="font-size: 0.88rem; color: var(--text-muted);">
+                Posts fetched from your authorized Instagram Professional Account and stored in Firestore.
+              </p>
+            </div>
+            <span class="preset-pill active" id="ig-media-count-badge">0 items</span>
+          </div>
+
+          <div id="ig-media-gallery-container">
+            <div class="empty-state-card">
+              <div class="empty-icon">📸</div>
+              <h3>No Instagram Media Imported Yet</h3>
+              <p>
+                Connect your Instagram Professional Account (Creator or Business) using the button above to import your authentic posts, timestamps, like counts, and comments.
+              </p>
+            </div>
+          </div>
+        </section>
+
+        <!-- Meta Developer App Setup & Architecture Guide -->
+        <section class="ig-guide-panel">
+          <h4>🛠️ Meta Developer App & Firebase Integration Guide</h4>
+          <p style="font-size: 0.85rem; color: var(--text-muted);">
+            Official Meta Instagram Graph API requirements and server-side Cloud Function configuration.
+          </p>
+
+          <div class="ig-guide-steps">
+            <div class="ig-step">
+              <span class="ig-step-num">1</span>
+              <div class="ig-step-content">
+                <p><strong>Register Meta Developer App:</strong> Go to <a href="https://developers.facebook.com" target="_blank" rel="noopener">Meta for Developers</a>, create a "Business" or "Consumer" type app, and add the <strong>Instagram Graph API</strong> / <strong>Instagram Login</strong> product.</p>
+                <small>Requires scopes: <code>instagram_basic</code> and <code>instagram_manage_insights</code>.</small>
+              </div>
+            </div>
+
+            <div class="ig-step">
+              <span class="ig-step-num">2</span>
+              <div class="ig-step-content">
+                <p><strong>Configure OAuth Redirect URI:</strong> In your Meta App Dashboard under Instagram > Basic Display or Instagram Login Settings, add your Firebase Cloud Function callback endpoint:</p>
+                <code style="font-size: 0.78rem; display: block; margin-top: 0.35rem; background: var(--bg-hover); padding: 0.4rem; border-radius: 4px;" id="code-redirect-uri">
+                  https://us-central1-YOUR_PROJECT_ID.cloudfunctions.net/instagramOAuthCallback
+                </code>
+              </div>
+            </div>
+
+            <div class="ig-step">
+              <span class="ig-step-num">3</span>
+              <div class="ig-step-content">
+                <p><strong>Account Requirement:</strong> The connected account must be an <strong>Instagram Professional Account</strong> (Creator or Business). Personal Instagram accounts do not have API permissions for media metrics or insights.</p>
+                <small>You can convert any Instagram account to Professional in Instagram App > Settings > Account Type > Switch to Professional Account (free).</small>
+              </div>
+            </div>
+
+            <div class="ig-step">
+              <span class="ig-step-num">4</span>
+              <div class="ig-step-content">
+                <p><strong>Server-Side Secret Storage:</strong> Client secrets and long-lived access tokens are strictly managed in Firebase Cloud Functions and stored in the private collection <code>instagramTokens/{userId}</code> with zero client-read access.</p>
+              </div>
+            </div>
+          </div>
+
+          <!-- Diagnostic Check Button -->
+          <div style="margin-top: 1.5rem; padding-top: 1.25rem; border-top: 1px solid var(--border-subtle); display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div>
+              <strong style="font-size: 0.9rem;">Test Cloud Functions Connectivity:</strong>
+              <span id="diagnostic-status-text" style="font-size: 0.82rem; color: var(--text-muted); margin-left: 0.5rem;">Click to check</span>
+            </div>
+            <button type="button" class="btn btn-outline btn-sm" id="btn-test-diagnostics">
+              🔍 Run Diagnostics
+            </button>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-bottom-nav">
+    <a href="dashboard.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📊</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="instagram.html" class="mobile-nav-item active">
+      <span class="mobile-nav-icon">📸</span>
+      <span>Instagram</span>
+    </a>
+    <a href="feed.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📰</span>
+      <span>Feed</span>
+    </a>
+    <a href="algorithm-studio.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">🎛️</span>
+      <span>Studio</span>
+    </a>
+    <a href="profile.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { initAuth, getCurrentUser, requireAuth, logoutUser } from "./js/auth.js";
+    import { 
+      getInstagramConnection, 
+      startInstagramOAuthFlow, 
+      disconnectInstagramAccount, 
+      getImportedInstagramMedia, 
+      getFunctionsBaseUrl 
+    } from "./js/instagram.js";
+    import { triggerInstagramSync, testFunctionsConnectivity } from "./js/instagram-sync.js";
+    import { showToast, formatRelativeTime, escapeHtml, formatCount } from "./js/utils.js";
+    import { markAllNotificationsAsRead } from "./js/notifications.js";
+
+    document.getElementById("btn-sidebar-logout").addEventListener("click", () => logoutUser());
+
+    // Update code redirect URI dynamically based on project ID
+    const currentBaseUrl = getFunctionsBaseUrl();
+    const redirectUriCode = document.getElementById("code-redirect-uri");
+    if (redirectUriCode) {
+      redirectUriCode.textContent = `${currentBaseUrl}/instagramOAuthCallback`;
+    }
+
+    // Check URL parameters for OAuth outcome
+    const urlParams = new URLSearchParams(window.location.search);
+    const oauthStatus = urlParams.get("status");
+    const oauthError = urlParams.get("error");
+    const oauthUsername = urlParams.get("username");
+
+    if (oauthError) {
+      const errBox = document.getElementById("ig-error-container");
+      const errText = document.getElementById("ig-error-text");
+      if (errBox && errText) {
+        errBox.style.display = "block";
+        errText.textContent = decodeURIComponent(oauthError);
+      }
+      showToast("Instagram connection failed: " + decodeURIComponent(oauthError), "error", 5000);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    } else if (oauthStatus === "connected") {
+      showToast(`Instagram account @${oauthUsername || 'connected'} linked successfully!`, "success", 5000);
+      window.history.replaceState({}, document.title, window.location.pathname);
+    }
+
+    async function loadInstagramPage() {
+      if (!requireAuth()) return;
+      await initAuth();
+      const user = getCurrentUser();
+
+      const connectBtn = document.getElementById("btn-connect-instagram");
+      const syncBtn = document.getElementById("btn-sync-instagram");
+      const disconnectBtn = document.getElementById("btn-disconnect-instagram");
+
+      const usernameDisplay = document.getElementById("ig-username-display");
+      const typeDisplay = document.getElementById("ig-account-type-display");
+      const statusBadge = document.getElementById("ig-status-badge");
+      const avatarImg = document.getElementById("ig-user-avatar");
+      const lastSyncDisplay = document.getElementById("stat-ig-last-sync");
+      const tokenExpiryLabel = document.getElementById("ig-token-expiry-label");
+
+      // Fetch connection status
+      const conn = await getInstagramConnection(user.uid);
+
+      if (conn && conn.connectionStatus === "connected") {
+        usernameDisplay.textContent = `@${conn.instagramUsername}`;
+        typeDisplay.textContent = conn.accountType || "PROFESSIONAL";
+        statusBadge.className = "ig-status-pill connected";
+        statusBadge.innerHTML = `<span class="pulse-dot"></span> Connected`;
+
+        if (conn.profilePictureUrl) {
+          avatarImg.src = conn.profilePictureUrl;
+        }
+
+        if (conn.lastSyncAt) {
+          lastSyncDisplay.textContent = formatRelativeTime(conn.lastSyncAt);
+        }
+
+        if (conn.tokenExpiresAt) {
+          tokenExpiryLabel.textContent = `Token active until: ${new Date(conn.tokenExpiresAt).toLocaleDateString()}`;
+        }
+
+        connectBtn.style.display = "none";
+        syncBtn.style.display = "inline-flex";
+        disconnectBtn.style.display = "inline-flex";
+      } else if (conn && conn.connectionStatus === "token_expired") {
+        usernameDisplay.textContent = `@${conn.instagramUsername}`;
+        statusBadge.className = "ig-status-pill error";
+        statusBadge.innerHTML = `⚠️ Token Expired`;
+        connectBtn.textContent = "🔄 Reconnect Instagram";
+        connectBtn.style.display = "inline-flex";
+        syncBtn.style.display = "none";
+        disconnectBtn.style.display = "inline-flex";
+      } else {
+        usernameDisplay.textContent = "Not Connected";
+        typeDisplay.textContent = "NO ACCOUNT";
+        statusBadge.className = "ig-status-pill disconnected";
+        statusBadge.innerHTML = `<span class="pulse-dot"></span> Disconnected`;
+        connectBtn.textContent = "📸 Connect Instagram";
+        connectBtn.style.display = "inline-flex";
+        syncBtn.style.display = "none";
+        disconnectBtn.style.display = "none";
+      }
+
+      // Load imported media
+      await loadMediaGallery(user.uid);
+    }
+
+    async function loadMediaGallery(userId) {
+      const container = document.getElementById("ig-media-gallery-container");
+      const countBadge = document.getElementById("ig-media-count-badge");
+      const statPostsCount = document.getElementById("stat-ig-posts-count");
+      const statTotalLikes = document.getElementById("stat-ig-total-likes");
+      const statTotalComments = document.getElementById("stat-ig-total-comments");
+
+      const mediaList = await getImportedInstagramMedia(userId);
+
+      if (countBadge) countBadge.textContent = `${mediaList.length} items`;
+      if (statPostsCount) statPostsCount.textContent = mediaList.length;
+
+      const totalLikes = mediaList.reduce((acc, m) => acc + (m.likeCount || 0), 0);
+      const totalComments = mediaList.reduce((acc, m) => acc + (m.commentsCount || 0), 0);
+
+      if (statTotalLikes) statTotalLikes.textContent = formatCount(totalLikes);
+      if (statTotalComments) statTotalComments.textContent = formatCount(totalComments);
+
+      if (mediaList.length === 0) {
+        container.innerHTML = `
+          <div class="empty-state-card">
+            <div class="empty-icon">📸</div>
+            <h3>No Instagram Media Imported Yet</h3>
+            <p>Connect your Instagram Professional Account using the button above to import your authentic posts, timestamps, like counts, and comments.</p>
+          </div>
+        `;
+        return;
+      }
+
+      container.innerHTML = `
+        <div class="ig-media-gallery">
+          ${mediaList.map(item => `
+            <div class="ig-media-card">
+              <div class="ig-media-thumb-wrapper">
+                <img src="${item.mediaUrl}" alt="Instagram Media" class="ig-media-thumb" loading="lazy" onerror="this.src='https://images.unsplash.com/photo-1611162617213-7d7a39e9b1d7?w=400&auto=format&fit=crop&q=80'">
+                <span class="ig-media-type-badge">${item.mediaType}</span>
+              </div>
+              <div class="ig-media-body">
+                <span class="ig-media-time">${formatRelativeTime(item.timestamp)}</span>
+                <p class="ig-media-caption">${escapeHtml(item.caption || '(No caption)')}</p>
+                <div class="ig-media-metrics-bar">
+                  <span>❤️ ${formatCount(item.likeCount)}</span>
+                  <span>💬 ${formatCount(item.commentsCount)}</span>
+                  <a href="${item.permalink}" target="_blank" rel="noopener">Instagram ↗</a>
+                </div>
+              </div>
+            </div>
+          `).join("")}
+        </div>
+      `;
+    }
+
+    // Connect button
+    document.getElementById("btn-connect-instagram").addEventListener("click", async () => {
+      try {
+        await startInstagramOAuthFlow();
+      } catch (err) {
+        showToast(err.message, "error");
+      }
+    });
+
+    // Sync button
+    const syncBtn = document.getElementById("btn-sync-instagram");
+    syncBtn.addEventListener("click", async () => {
+      syncBtn.disabled = true;
+      syncBtn.innerHTML = `<span class="spinner-sm"></span> Syncing...`;
+      try {
+        await triggerInstagramSync();
+        await loadInstagramPage();
+      } catch (err) {
+        showToast(err.message, "error");
+      } finally {
+        syncBtn.disabled = false;
+        syncBtn.innerHTML = `🔄 Sync Now`;
+      }
+    });
+
+    // Disconnect button
+    document.getElementById("btn-disconnect-instagram").addEventListener("click", async () => {
+      if (confirm("Are you sure you want to disconnect this Instagram account?")) {
+        try {
+          await disconnectInstagramAccount();
+          await loadInstagramPage();
+        } catch (err) {
+          showToast(err.message, "error");
+        }
+      }
+    });
+
+    // Diagnostics button
+    document.getElementById("btn-test-diagnostics").addEventListener("click", async () => {
+      const textEl = document.getElementById("diagnostic-status-text");
+      textEl.textContent = "Checking Cloud Function...";
+      const result = await testFunctionsConnectivity();
+      if (result.isConfigured) {
+        textEl.innerHTML = `<span style="color: var(--success); font-weight:700;">● Cloud Functions Online</span> (${result.apiVersion})`;
+        showToast("Cloud Functions endpoint is reachable!", "success");
+      } else {
+        textEl.innerHTML = `<span style="color: var(--warning); font-weight:700;">● Not reachable:</span> ${result.message}`;
+        showToast("Cloud Functions not configured or offline: " + result.message, "warning");
+      }
+    });
+
+    loadInstagramPage();
+  </script>
+</body>
+</html>

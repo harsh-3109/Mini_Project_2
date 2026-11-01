@@ -1,0 +1,159 @@
+/**
+ * Recommendation-Ranked Social Feed Studio
+ * Responsive Layout & Mobile Breakpoints
+ */
+
+/* Mobile Bottom Navigation Bar */
+.mobile-bottom-nav {
+  display: none;
+  position: fixed;
+  bottom: 0;
+  left: 0;
+  right: 0;
+  height: 60px;
+  background: var(--bg-surface);
+  border-top: 1px solid var(--border-subtle);
+  z-index: 100;
+  justify-content: space-around;
+  align-items: center;
+  box-shadow: var(--shadow-lg);
+}
+
+.mobile-nav-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.2rem;
+  color: var(--text-muted);
+  font-size: 0.72rem;
+  font-weight: 600;
+  text-decoration: none !important;
+  padding: 0.4rem;
+}
+
+.mobile-nav-item.active {
+  color: var(--primary);
+}
+
+.mobile-nav-icon {
+  font-size: 1.25rem;
+}
+
+/* Tablet Breakpoint (max-width: 1024px) */
+@media (max-width: 1024px) {
+  :root {
+    --sidebar-width: 220px;
+  }
+
+  .feed-layout {
+    grid-template-columns: 1fr;
+    max-width: 720px;
+  }
+
+  .feed-sidebar-col {
+    display: none;
+  }
+
+  .dashboard-grid-layout {
+    grid-template-columns: 1fr;
+  }
+
+  .studio-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .charts-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .comp-dual-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .comp-controls-row {
+    grid-template-columns: 1fr;
+  }
+}
+
+/* Mobile Breakpoint (max-width: 768px) */
+@media (max-width: 768px) {
+  .sidebar {
+    display: none; /* Replaced by bottom nav */
+  }
+
+  .mobile-bottom-nav {
+    display: flex;
+  }
+
+  .main-wrapper {
+    padding-bottom: 70px; /* Space for bottom nav */
+  }
+
+  .app-header {
+    padding: 0 1rem;
+  }
+
+  .dashboard-container,
+  .studio-container,
+  .analytics-container {
+    padding: 1.25rem 1rem;
+  }
+
+  .feed-layout {
+    padding: 1.25rem 0.75rem;
+  }
+
+  .post-card {
+    padding: 1.1rem;
+  }
+
+  .stats-grid,
+  .kpi-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 0.75rem;
+  }
+
+  .stat-card,
+  .kpi-card {
+    padding: 1rem;
+  }
+
+  .stat-meta strong,
+  .kpi-value {
+    font-size: 1.35rem;
+  }
+
+  .preset-buttons-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .hero-quick-actions {
+    flex-direction: column;
+  }
+
+  .auth-card {
+    padding: 2rem 1.25rem;
+  }
+}
+
+/* Small Phones (max-width: 480px) */
+@media (max-width: 480px) {
+  .stats-grid,
+  .kpi-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .post-header {
+    flex-direction: column;
+    align-items: flex-start;
+  }
+
+  .post-rank-badge {
+    align-self: flex-start;
+  }
+
+  .feed-filter-bar {
+    flex-direction: column;
+    align-items: stretch;
+  }
+}

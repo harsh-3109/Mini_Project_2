@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Platform Settings and Firebase configuration for Recommendation-Ranked Social Feed Studio.">
+  <title>Settings | Recommendation Studio</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    .settings-container {
+      max-width: 900px;
+      margin: 0 auto;
+      padding: 2rem 1.5rem;
+      width: 100%;
+    }
+    .settings-section {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 1.75rem;
+      box-shadow: var(--shadow-sm);
+      margin-bottom: 2rem;
+    }
+    .settings-section h3 {
+      font-size: 1.2rem;
+      font-weight: 800;
+      margin-bottom: 0.35rem;
+    }
+    .settings-section-subtitle {
+      font-size: 0.88rem;
+      color: var(--text-muted);
+      margin-bottom: 1.5rem;
+    }
+    .theme-toggle-row {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      padding: 1rem 0;
+    }
+    /* Switch component */
+    .switch {
+      position: relative;
+      display: inline-block;
+      width: 52px;
+      height: 28px;
+    }
+    .switch input {
+      opacity: 0;
+      width: 0;
+      height: 0;
+    }
+    .slider-switch {
+      position: absolute;
+      cursor: pointer;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background-color: var(--border-subtle);
+      transition: .3s;
+      border-radius: 34px;
+    }
+    .slider-switch:before {
+      position: absolute;
+      content: "";
+      height: 20px;
+      width: 20px;
+      left: 4px;
+      bottom: 4px;
+      background-color: white;
+      transition: .3s;
+      border-radius: 50%;
+    }
+    input:checked + .slider-switch {
+      background-color: var(--primary);
+    }
+    input:checked + .slider-switch:before {
+      transform: translateX(24px);
+    }
+    .badge-success {
+      background: #d1fae5;
+      color: #065f46;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+    .badge-warning {
+      background: #fef3c7;
+      color: #b45309;
+      padding: 0.25rem 0.65rem;
+      border-radius: var(--radius-full);
+      font-size: 0.8rem;
+      font-weight: 700;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">⚡</div>
+        <div class="sidebar-brand">
+          <h1>RecStudio</h1>
+          <span>Algorithm Studio</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="feed.html" class="nav-item">
+          <span class="nav-icon">📰</span>
+          <span>Social Feed</span>
+        </a>
+        <a href="instagram.html" class="nav-item">
+          <span class="nav-icon">📸</span>
+          <span>Instagram</span>
+        </a>
+        <a href="algorithm-studio.html" class="nav-item">
+          <span class="nav-icon">🎛️</span>
+          <span>Algorithm Studio</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <span class="nav-icon">📈</span>
+          <span>Analytics</span>
+        </a>
+        <a href="explore.html" class="nav-item">
+          <span class="nav-icon">🧭</span>
+          <span>Explore</span>
+        </a>
+        <a href="saved-posts.html" class="nav-item">
+          <span class="nav-icon">🔖</span>
+          <span>Saved Posts</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <span class="nav-icon">👤</span>
+          <span>My Profile</span>
+        </a>
+        <a href="settings.html" class="nav-item active">
+          <span class="nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="profile.html" class="user-mini-profile">
+          <img src="" alt="Avatar" class="avatar-sm auth-user-avatar">
+          <div class="user-mini-meta">
+            <strong class="auth-user-name">Loading...</strong>
+            <span>View profile</span>
+          </div>
+        </a>
+        <button type="button" class="btn-icon" id="btn-sidebar-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <div class="main-wrapper">
+      <header class="app-header">
+        <div class="header-left">
+          <h2 class="page-title">Settings & Configuration</h2>
+        </div>
+
+        <div class="header-actions">
+          <div class="notif-wrapper" id="navbar-notif-container">
+            <button type="button" class="btn-notif-bell" id="btn-toggle-notifs" aria-label="Notifications">
+              🔔
+              <span class="notif-badge" id="navbar-notif-badge" style="display: none;">0</span>
+            </button>
+            <div class="notif-dropdown" id="navbar-notif-dropdown">
+              <div class="notif-header">
+                <span>Notifications</span>
+                <button type="button" class="btn btn-xs btn-outline" id="btn-mark-all-read">Mark all read</button>
+              </div>
+              <div class="notif-list" id="navbar-notif-list">
+                <div class="notif-empty">No notifications yet</div>
+              </div>
+            </div>
+          </div>
+          <a href="feed.html" class="btn btn-primary btn-sm">Feed</a>
+        </div>
+      </header>
+
+      <main class="settings-container">
+        <!-- Appearance Settings -->
+        <section class="settings-section">
+          <h3>Appearance & Theme</h3>
+          <p class="settings-section-subtitle">Customize the interface theme for high-contrast viewing.</p>
+
+          <div class="theme-toggle-row">
+            <div>
+              <strong style="display: block; font-size: 0.95rem;">Dark Mode</strong>
+              <span style="font-size: 0.82rem; color: var(--text-muted);">Switch between light theme and dark theme</span>
+            </div>
+            <label class="switch">
+              <input type="checkbox" id="theme-toggle-switch">
+              <span class="slider-switch"></span>
+            </label>
+          </div>
+        </section>
+
+        <!-- Meta Instagram Graph API & Cloud Functions Gateway -->
+        <section class="settings-section">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.5rem;">
+            <h3>Meta Instagram Graph API & Cloud Functions Gateway</h3>
+            <span id="meta-gateway-status" class="badge-warning">● Gateway Status Checking...</span>
+          </div>
+          <p class="settings-section-subtitle">
+            Configure your Meta App ID and deployed Firebase Cloud Functions gateway endpoint for authenticating and synchronizing official Instagram Business/Creator accounts.
+          </p>
+
+          <form id="meta-config-form">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label for="meta-app-id-input" class="form-label">Meta App ID</label>
+                <input type="text" id="meta-app-id-input" class="form-input" placeholder="e.g. 123456789012345">
+                <span style="font-size: 0.72rem; color: var(--text-muted);">From Meta for Developers App Dashboard</span>
+              </div>
+
+              <div class="form-group">
+                <label for="functions-base-url-input" class="form-label">Cloud Functions Base URL</label>
+                <input type="text" id="functions-base-url-input" class="form-input" placeholder="https://us-central1-YOUR-PROJECT.cloudfunctions.net">
+                <span style="font-size: 0.72rem; color: var(--text-muted);">Endpoint where index.js functions are deployed</span>
+              </div>
+            </div>
+
+            <div class="form-group" style="margin-top: 0.5rem;">
+              <label class="form-label">Meta OAuth Redirect URI (Register in Meta Dashboard)</label>
+              <div style="display: flex; gap: 0.5rem;">
+                <input type="text" id="meta-oauth-redirect-display" class="form-input" readonly style="background: var(--bg-body); font-family: var(--font-mono); font-size: 0.8rem;" value="https://us-central1-YOUR-PROJECT.cloudfunctions.net/instagramOAuthCallback">
+                <button type="button" class="btn btn-outline" id="btn-copy-redirect-uri" title="Copy Redirect URI">📋 Copy</button>
+              </div>
+              <span style="font-size: 0.72rem; color: var(--text-muted);">Add this exact URI under "Valid OAuth Redirect URIs" in your Meta App settings.</span>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 1rem; flex-wrap: wrap;">
+              <button type="submit" class="btn btn-primary">Save API Gateway Settings</button>
+              <button type="button" class="btn btn-outline" id="btn-test-cloud-functions">Test Gateway Connectivity</button>
+              <a href="instagram.html" class="btn btn-outline">Go to Instagram Hub →</a>
+            </div>
+          </form>
+        </section>
+
+        <!-- Firebase Configuration Manager -->
+        <section class="settings-section">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem; flex-wrap: wrap; gap: 0.5rem;">
+            <h3>Firebase Database & Auth Connection</h3>
+            <span id="fb-connection-status" class="badge-warning">● Educational Mode</span>
+          </div>
+          <p class="settings-section-subtitle">
+            Paste your Firebase project web configuration keys below to sync directly with your live Google Cloud Firebase Firestore database, or edit <code>js/firebase-config.js</code>.
+          </p>
+
+          <form id="firebase-config-form">
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label for="fb-api-key" class="form-label">API Key (apiKey)</label>
+                <input type="text" id="fb-api-key" class="form-input" placeholder="AIzaSy...">
+              </div>
+
+              <div class="form-group">
+                <label for="fb-project-id" class="form-label">Project ID (projectId)</label>
+                <input type="text" id="fb-project-id" class="form-input" placeholder="my-rec-studio">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label for="fb-auth-domain" class="form-label">Auth Domain (authDomain)</label>
+                <input type="text" id="fb-auth-domain" class="form-input" placeholder="my-rec-studio.firebaseapp.com">
+              </div>
+
+              <div class="form-group">
+                <label for="fb-storage-bucket" class="form-label">Storage Bucket (storageBucket)</label>
+                <input type="text" id="fb-storage-bucket" class="form-input" placeholder="my-rec-studio.appspot.com">
+              </div>
+            </div>
+
+            <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;">
+              <div class="form-group">
+                <label for="fb-sender-id" class="form-label">Messaging Sender ID</label>
+                <input type="text" id="fb-sender-id" class="form-input" placeholder="1234567890">
+              </div>
+
+              <div class="form-group">
+                <label for="fb-app-id" class="form-label">App ID (appId)</label>
+                <input type="text" id="fb-app-id" class="form-input" placeholder="1:1234567890:web:abcdef">
+              </div>
+            </div>
+
+            <div style="display: flex; gap: 0.75rem; margin-top: 0.5rem;">
+              <button type="submit" class="btn btn-primary">Save & Connect Firebase</button>
+              <button type="button" class="btn btn-outline" id="btn-reset-firebase">Reset to Placeholders</button>
+            </div>
+          </form>
+        </section>
+
+        <!-- Sample Data & Database Reset -->
+        <section class="settings-section">
+          <h3>Sample Data & Playground Tools</h3>
+          <p class="settings-section-subtitle">Manage realistic sample creators, diverse posts, and interaction graphs.</p>
+
+          <div style="display: flex; flex-direction: column; gap: 1rem;">
+            <div style="display: flex; align-items: center; justify-content: space-between; padding-bottom: 1rem; border-bottom: 1px solid var(--border-subtle); flex-wrap: wrap; gap: 0.75rem;">
+              <div>
+                <strong style="display: block; font-size: 0.92rem;">Seed Initial Educational Dataset</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Populate 5 sample creators and 20 realistic posts with varying timestamps and engagement.</span>
+              </div>
+              <button type="button" class="btn btn-outline" id="btn-seed-data">Re-seed Sample Data</button>
+            </div>
+
+            <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 0.75rem;">
+              <div>
+                <strong style="display: block; font-size: 0.92rem; color: var(--danger);">Reset Local Playground Data</strong>
+                <span style="font-size: 0.8rem; color: var(--text-muted);">Clears local posts, comments, likes, and custom saved presets.</span>
+              </div>
+              <button type="button" class="btn btn-danger" id="btn-clear-demo-data">Clear Local Data</button>
+            </div>
+          </div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <nav class="mobile-bottom-nav">
+    <a href="dashboard.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📊</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="feed.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📰</span>
+      <span>Feed</span>
+    </a>
+    <a href="algorithm-studio.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">🎛️</span>
+      <span>Studio</span>
+    </a>
+    <a href="analytics.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📈</span>
+      <span>Analytics</span>
+    </a>
+    <a href="profile.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { initSettingsPage } from "./js/settings.js";
+    import { logoutUser } from "./js/auth.js";
+    import { markAllNotificationsAsRead } from "./js/notifications.js";
+
+    document.getElementById("btn-sidebar-logout").addEventListener("click", () => logoutUser());
+
+    const notifBtn = document.getElementById("btn-toggle-notifs");
+    const notifDropdown = document.getElementById("navbar-notif-dropdown");
+    notifBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      notifDropdown.classList.toggle("active");
+    });
+    document.addEventListener("click", () => notifDropdown.classList.remove("active"));
+
+    document.getElementById("btn-mark-all-read").addEventListener("click", async () => {
+      await markAllNotificationsAsRead();
+    });
+
+    initSettingsPage();
+  </script>
+</body>
+</html>

@@ -1,0 +1,328 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Recommendation-Ranked Social Feed Studio - An educational platform demystifying how recommendation algorithms rank social feeds using Recency, Engagement, and Affinity.">
+  <title>Recommendation-Ranked Social Feed Studio | Transparent Algorithmic Feed Engine</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/feed.css">
+  <link rel="stylesheet" href="css/algorithm.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    /* Landing page bespoke styling */
+    .landing-nav {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 1.25rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+    }
+    .landing-logo {
+      display: flex;
+      align-items: center;
+      gap: 0.75rem;
+      text-decoration: none !important;
+      color: var(--text-main);
+    }
+    .landing-nav-links {
+      display: flex;
+      align-items: center;
+      gap: 1.5rem;
+    }
+    .hero-section {
+      max-width: 1100px;
+      margin: 3.5rem auto 4rem auto;
+      text-align: center;
+      padding: 0 1.5rem;
+    }
+    .hero-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.5rem;
+      padding: 0.35rem 0.85rem;
+      background: var(--primary-light);
+      color: var(--primary);
+      border-radius: var(--radius-full);
+      font-size: 0.82rem;
+      font-weight: 700;
+      margin-bottom: 1.5rem;
+    }
+    .hero-title {
+      font-size: 3.2rem;
+      font-weight: 800;
+      letter-spacing: -0.03em;
+      line-height: 1.15;
+      margin-bottom: 1.25rem;
+      color: var(--text-main);
+    }
+    .hero-title span {
+      background: linear-gradient(135deg, #4f46e5 0%, #8b5cf6 50%, #06b6d4 100%);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+    .hero-desc {
+      font-size: 1.2rem;
+      color: var(--text-muted);
+      max-width: 740px;
+      margin: 0 auto 2.5rem auto;
+      line-height: 1.6;
+    }
+    .hero-cta-group {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 1rem;
+      flex-wrap: wrap;
+    }
+    .features-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+      gap: 1.75rem;
+      max-width: 1150px;
+      margin: 0 auto 5rem auto;
+      padding: 0 1.5rem;
+    }
+    .feature-card {
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 2rem;
+      box-shadow: var(--shadow-sm);
+      transition: var(--transition);
+    }
+    .feature-card:hover {
+      transform: translateY(-4px);
+      box-shadow: var(--shadow-md);
+      border-color: var(--primary);
+    }
+    .feature-icon-box {
+      width: 52px;
+      height: 52px;
+      border-radius: var(--radius-md);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-size: 1.6rem;
+      margin-bottom: 1.25rem;
+    }
+    .math-section {
+      background: var(--bg-surface);
+      border-top: 1px solid var(--border-subtle);
+      border-bottom: 1px solid var(--border-subtle);
+      padding: 5rem 1.5rem;
+      margin-bottom: 4rem;
+    }
+    .math-inner {
+      max-width: 960px;
+      margin: 0 auto;
+    }
+    .formula-showcase {
+      background: var(--bg-hover);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-md);
+      padding: 1.5rem;
+      font-family: var(--font-mono);
+      font-size: 1.1rem;
+      text-align: center;
+      margin: 2rem 0;
+      color: var(--primary);
+    }
+    .landing-footer {
+      max-width: 1150px;
+      margin: 0 auto;
+      padding: 3rem 1.5rem 4rem 1.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      border-top: 1px solid var(--border-subtle);
+      color: var(--text-muted);
+      font-size: 0.88rem;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Top Navigation -->
+  <header>
+    <nav class="landing-nav">
+      <a href="index.html" class="landing-logo">
+        <div class="sidebar-logo">⚡</div>
+        <div class="sidebar-brand">
+          <h1>Recommendation Studio</h1>
+          <span>Algorithmic Feed Engine</span>
+        </div>
+      </a>
+
+      <div class="landing-nav-links">
+        <a href="#how-it-works">How It Works</a>
+        <a href="#algorithm">The Math</a>
+        <a href="#features">Features</a>
+        <a href="login.html" class="btn btn-outline btn-sm">Log In</a>
+        <a href="register.html" class="btn btn-primary btn-sm">Get Started</a>
+      </div>
+    </nav>
+  </header>
+
+  <!-- Hero Section -->
+  <main>
+    <section class="hero-section">
+      <div class="hero-badge">
+        <span>✨</span> Educational Recommendation Platform
+      </div>
+      <h1 class="hero-title">
+        Demystifying Why Social Feeds Rank What You See <span>First</span>
+      </h1>
+      <p class="hero-desc">
+        Modern social media feeds are governed by opaque, black-box recommendation algorithms. 
+        Take back control: adjust live signal weights, inspect mathematical score breakdowns, and observe real-time content re-ranking.
+      </p>
+
+      <div class="hero-cta-group">
+        <a href="feed.html" class="btn btn-primary" style="padding: 0.85rem 1.75rem; font-size: 1rem;">
+          🚀 Launch Social Feed
+        </a>
+        <a href="algorithm-studio.html" class="btn btn-outline" style="padding: 0.85rem 1.75rem; font-size: 1rem;">
+          🎛️ Tune Algorithm Studio
+        </a>
+        <a href="dashboard.html" class="btn btn-outline" style="padding: 0.85rem 1.75rem; font-size: 1rem;">
+          📊 View Dashboard
+        </a>
+      </div>
+    </section>
+
+    <!-- How It Works Section -->
+    <section class="features-grid" id="how-it-works">
+      <div class="feature-card">
+        <div class="feature-icon-box" style="background: var(--color-recency-bg); color: var(--color-recency);">
+          ⏳
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem;">1. Recency Decay</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.5;">
+          Measures freshness using an exponential time-decay formula. Brand-new publications score close to 100, while older posts gradually taper down over configurable half-life hours.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-box" style="background: var(--color-engagement-bg); color: var(--color-engagement);">
+          🔥
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem;">2. Normalized Virality</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.5;">
+          Combines likes (1x), comments (2.5x), and shares (4x). We apply logarithmic compression to ensure viral posts don't permanently monopolize the feed.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-box" style="background: var(--color-affinity-bg); color: var(--color-affinity);">
+          🤝
+        </div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem;">3. Social Affinity</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem; line-height: 1.5;">
+          Quantifies personal relationships: direct follows (+45), mutual connections (+15), and historical conversation depth, prioritizing creator intimacy over noise.
+        </p>
+      </div>
+    </section>
+
+    <!-- Mathematical Formula Showcase -->
+    <section class="math-section" id="algorithm">
+      <div class="math-inner">
+        <div style="text-align: center; margin-bottom: 2rem;">
+          <h2 style="font-size: 2rem; font-weight: 800; letter-spacing: -0.02em;">Transparent Mathematical Formulation</h2>
+          <p style="color: var(--text-muted); max-width: 600px; margin: 0.5rem auto 0 auto;">
+            Every post in your feed is assigned a composite score from 0 to 100 using strictly enforced normalized weights.
+          </p>
+        </div>
+
+        <div class="formula-showcase">
+          Final Score = (Recency × W<sub>R</sub>) + (Engagement × W<sub>E</sub>) + (Affinity × W<sub>A</sub>)
+        </div>
+
+        <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(260px, 1fr)); gap: 1.5rem;">
+          <div style="padding: 1.25rem; background: var(--bg-hover); border-radius: var(--radius-md);">
+            <strong style="color: var(--color-recency); display: block; margin-bottom: 0.35rem;">Time Decay Formula</strong>
+            <code style="font-size: 0.85rem; color: var(--text-main);">S_rec = 100 · e^(-0.04 · ΔHours)</code>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Ensures smooth, continuous decay without abrupt cliff effects.</p>
+          </div>
+
+          <div style="padding: 1.25rem; background: var(--bg-hover); border-radius: var(--radius-md);">
+            <strong style="color: var(--color-engagement); display: block; margin-bottom: 0.35rem;">Log-Compressed Virality</strong>
+            <code style="font-size: 0.85rem; color: var(--text-main);">S_eng = (ln(1 + Raw) / ln(1 + Max)) · 100</code>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Dampens extreme outlier posts to preserve feed diversity.</p>
+          </div>
+
+          <div style="padding: 1.25rem; background: var(--bg-hover); border-radius: var(--radius-md);">
+            <strong style="color: var(--color-affinity); display: block; margin-bottom: 0.35rem;">Network Graph Proximity</strong>
+            <code style="font-size: 0.85rem; color: var(--text-main);">S_aff = Base + Follow + Mutual + History</code>
+            <p style="font-size: 0.8rem; color: var(--text-muted); margin-top: 0.5rem;">Directly reflects real following choices and reply interactions.</p>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <!-- Features Section -->
+    <section class="features-grid" id="features">
+      <div class="feature-card">
+        <div class="feature-icon-box" style="background: #e0e7ff; color: var(--primary);">🎛️</div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem;">Interactive Studio</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem;">
+          Drag sliders to rebalance weights in real time with auto-normalization. Switch between Chronological, Viral Popularity, and Personalized models instantly.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-box" style="background: #dbeafe; color: #2563eb;">⚖️</div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem;">A/B Algorithm Comparison</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem;">
+          Compare two ranking models side-by-side. Inspect rank delta indicators (▲ +3, ▼ -2) and understand why content visibility shifted.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-box" style="background: #fef3c7; color: #b45309;">📊</div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem;">Native Visual Analytics</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem;">
+          Custom HTML Canvas bar charts, SVG doughnut contribution meters, and score distribution histograms powered by real platform data.
+        </p>
+      </div>
+
+      <div class="feature-card">
+        <div class="feature-icon-box" style="background: #fce7f3; color: #db2777;">📸</div>
+        <h3 style="font-size: 1.25rem; font-weight: 800; margin-bottom: 0.5rem;">Real Meta Instagram API</h3>
+        <p style="color: var(--text-muted); font-size: 0.92rem;">
+          Connect official Instagram Business or Creator accounts with secure OAuth. Import live media, verify actual engagement metrics, and rank real-world publications.
+        </p>
+      </div>
+    </section>
+  </main>
+
+  <!-- Footer -->
+  <footer class="landing-footer">
+    <div style="display: flex; align-items: center; gap: 0.75rem;">
+      <div class="sidebar-logo" style="width: 28px; height: 28px; font-size: 0.85rem;">⚡</div>
+      <span>Recommendation-Ranked Social Feed Studio</span>
+    </div>
+    <div style="display: flex; gap: 1.5rem; flex-wrap: wrap;">
+      <a href="feed.html">Feed</a>
+      <a href="instagram.html">Instagram</a>
+      <a href="algorithm-studio.html">Studio</a>
+      <a href="analytics.html">Analytics</a>
+      <a href="settings.html">Settings</a>
+    </div>
+  </footer>
+
+  <script type="module">
+    import { initAuth } from "./js/auth.js";
+    initAuth();
+  </script>
+</body>
+</html>

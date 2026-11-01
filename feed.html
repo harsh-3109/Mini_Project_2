@@ -1,0 +1,346 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Recommendation-Ranked Social Media Feed. Transparently observe how posts are sorted using multi-signal scoring.">
+  <title>Social Media Feed | Recommendation Studio</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/feed.css">
+  <link rel="stylesheet" href="css/instagram.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    /* Source Switcher Tabs */
+    .source-switcher-bar {
+      display: flex;
+      background: var(--bg-surface);
+      border: 1px solid var(--border-subtle);
+      border-radius: var(--radius-lg);
+      padding: 0.35rem;
+      gap: 0.35rem;
+      box-shadow: var(--shadow-sm);
+    }
+    .source-tab-btn {
+      flex: 1;
+      padding: 0.6rem 1rem;
+      border: none;
+      background: transparent;
+      border-radius: var(--radius-md);
+      font-weight: 700;
+      font-size: 0.85rem;
+      color: var(--text-muted);
+      cursor: pointer;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.45rem;
+      transition: var(--transition);
+    }
+    .source-tab-btn:hover {
+      color: var(--text-main);
+      background: var(--bg-hover);
+    }
+    .source-tab-btn.active {
+      background: var(--primary);
+      color: #fff;
+      box-shadow: 0 2px 4px var(--primary-glow);
+    }
+    .source-badge {
+      display: inline-flex;
+      align-items: center;
+      gap: 0.3rem;
+      font-size: 0.7rem;
+      font-weight: 800;
+      text-transform: uppercase;
+      padding: 0.15rem 0.5rem;
+      border-radius: var(--radius-full);
+    }
+    .source-instagram {
+      background: #fce7f3;
+      color: #be185d;
+      border: 1px solid #fbcfe8;
+    }
+    .source-community {
+      background: #ede9fe;
+      color: #6d28d9;
+      border: 1px solid #ddd6fe;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Desktop Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">⚡</div>
+        <div class="sidebar-brand">
+          <h1>RecStudio</h1>
+          <span>Algorithm Studio</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="instagram.html" class="nav-item">
+          <span class="nav-icon">📸</span>
+          <span>Instagram API</span>
+        </a>
+        <a href="feed.html" class="nav-item active">
+          <span class="nav-icon">📰</span>
+          <span>Social Feed</span>
+        </a>
+        <a href="algorithm-studio.html" class="nav-item">
+          <span class="nav-icon">🎛️</span>
+          <span>Algorithm Studio</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <span class="nav-icon">📈</span>
+          <span>Analytics</span>
+        </a>
+        <a href="explore.html" class="nav-item">
+          <span class="nav-icon">🧭</span>
+          <span>Explore</span>
+        </a>
+        <a href="saved-posts.html" class="nav-item">
+          <span class="nav-icon">🔖</span>
+          <span>Saved Posts</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <span class="nav-icon">👤</span>
+          <span>My Profile</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <span class="nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="profile.html" class="user-mini-profile">
+          <img src="" alt="Avatar" class="avatar-sm auth-user-avatar">
+          <div class="user-mini-meta">
+            <strong class="auth-user-name">Loading...</strong>
+            <span>View profile</span>
+          </div>
+        </a>
+        <button type="button" class="btn-icon" id="btn-sidebar-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- App Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <h2 class="page-title">Ranked Social Feed</h2>
+        </div>
+
+        <div class="header-actions">
+          <!-- Notification Bell -->
+          <div class="notif-wrapper" id="navbar-notif-container">
+            <button type="button" class="btn-notif-bell" id="btn-toggle-notifs" aria-label="Notifications">
+              🔔
+              <span class="notif-badge" id="navbar-notif-badge" style="display: none;">0</span>
+            </button>
+            <div class="notif-dropdown" id="navbar-notif-dropdown">
+              <div class="notif-header">
+                <span>Notifications</span>
+                <button type="button" class="btn btn-xs btn-outline" id="btn-mark-all-read">Mark all read</button>
+              </div>
+              <div class="notif-list" id="navbar-notif-list">
+                <div class="notif-empty">No notifications yet</div>
+              </div>
+            </div>
+          </div>
+
+          <a href="algorithm-studio.html" class="btn btn-primary btn-sm">🎛️ Tune Weights</a>
+        </div>
+      </header>
+
+      <!-- Main Feed Stream Layout -->
+      <main class="feed-layout">
+        <!-- Main Feed Column -->
+        <div class="feed-main-col">
+          <!-- Two Feed Sources Selector -->
+          <div class="source-switcher-bar">
+            <button type="button" class="source-tab-btn active" data-source="all">
+              ⚡ All Ranked Content
+            </button>
+            <button type="button" class="source-tab-btn" data-source="instagram">
+              📸 Real Instagram Media
+            </button>
+            <button type="button" class="source-tab-btn" data-source="community">
+              💬 Community Discussions
+            </button>
+          </div>
+
+          <!-- Quick Preset Selector Bar -->
+          <div id="quick-preset-container">
+            <!-- Rendered by feed.js -->
+          </div>
+
+          <!-- Create Community Post Card -->
+          <div class="create-post-card" id="community-create-post-card">
+            <div class="create-post-header">
+              <img src="" alt="Avatar" class="avatar auth-user-avatar">
+              <strong class="auth-user-name">Share a community insight...</strong>
+            </div>
+            <form id="create-post-form">
+              <textarea id="post-content-input" class="create-post-textarea" placeholder="Write a post to test educational recommendation rankings... Use #hashtags" required></textarea>
+              <div class="create-post-actions">
+                <div class="post-media-input-wrapper">
+                  <input type="url" id="post-image-input" class="post-media-input" placeholder="Image URL (optional)">
+                </div>
+                <button type="submit" class="btn btn-primary btn-sm">Publish Post</button>
+              </div>
+            </form>
+          </div>
+
+          <!-- Filter & Search Bar -->
+          <div class="feed-filter-bar">
+            <div class="filter-pills">
+              <button type="button" class="feed-filter-btn active" data-filter="all">All Items</button>
+              <button type="button" class="feed-filter-btn" data-filter="following">Following Only</button>
+              <button type="button" class="feed-filter-btn" data-filter="mine">My Posts</button>
+              <button type="button" class="feed-filter-btn" data-filter="media">With Media</button>
+            </div>
+            <div class="feed-search-box">
+              <input type="text" id="feed-search-input" class="feed-search-input" placeholder="Search keywords, captions, authors...">
+            </div>
+          </div>
+
+          <!-- Feed Posts List Container -->
+          <div id="feed-posts-list" style="display: flex; flex-direction: column; gap: 1.5rem;">
+            <!-- Rendered dynamically by feed.js with rankings & explainability -->
+          </div>
+        </div>
+
+        <!-- Right Helper Sidebar -->
+        <aside class="feed-sidebar-col">
+          <!-- Instagram Sync Quick Widget -->
+          <div class="dash-panel" style="border-top: 3px solid #e1306c;">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem;">
+              <h4 style="font-size: 0.95rem; font-weight: 800;">📸 Instagram Feed Sync</h4>
+              <a href="instagram.html" class="btn btn-xs btn-outline">Manage</a>
+            </div>
+            <p style="font-size: 0.8rem; color: var(--text-muted); line-height: 1.4; margin-bottom: 0.75rem;" id="widget-ig-status-text">
+              Connect your Instagram Professional account to rank your real Instagram posts.
+            </p>
+            <a href="instagram.html" class="btn btn-instagram-connect btn-xs" style="width: 100%; justify-content: center;" id="widget-ig-btn">
+              Connect Instagram
+            </a>
+          </div>
+
+          <div class="dash-panel">
+            <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.5rem;">💡 Recommendation Transparency</h4>
+            <p style="font-size: 0.82rem; color: var(--text-muted); line-height: 1.45; margin-bottom: 0.85rem;">
+              Each item is scored using:
+              <br>• <strong style="color: var(--color-recency);">Recency:</strong> Time decay curve.
+              <br>• <strong style="color: var(--color-engagement);">Engagement:</strong> Log-normalized likes + comments.
+              <br>• <strong style="color: var(--color-affinity);">Affinity:</strong> In-app social proximity.
+            </p>
+            <p style="font-size: 0.78rem; color: var(--text-light); line-height: 1.4;">
+              * Educational algorithm. Community interactions do not alter external Instagram data.
+            </p>
+          </div>
+
+          <div class="dash-panel">
+            <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.75rem;">🏷️ Trending Topics</h4>
+            <div style="display: flex; flex-wrap: wrap; gap: 0.4rem;">
+              <span class="preset-pill" style="font-size: 0.75rem;">#InstagramAPI</span>
+              <span class="preset-pill" style="font-size: 0.75rem;">#AlgorithmEthics</span>
+              <span class="preset-pill" style="font-size: 0.75rem;">#MachineLearning</span>
+              <span class="preset-pill" style="font-size: 0.75rem;">#MetaGraphAPI</span>
+              <span class="preset-pill" style="font-size: 0.75rem;">#VanillaJS</span>
+            </div>
+          </div>
+        </aside>
+      </main>
+    </div>
+  </div>
+
+  <!-- Edit Post Modal -->
+  <div class="modal-overlay" id="edit-post-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Edit Post</h3>
+        <button type="button" class="btn-icon" onclick="document.getElementById('edit-post-modal').classList.remove('active')">✕</button>
+      </div>
+      <form id="edit-post-form">
+        <div class="modal-body">
+          <div class="form-group">
+            <label for="edit-post-content" class="form-label">Post Content</label>
+            <textarea id="edit-post-content" class="form-textarea" rows="4" required></textarea>
+          </div>
+          <div class="form-group">
+            <label for="edit-post-image" class="form-label">Image URL (Optional)</label>
+            <input type="url" id="edit-post-image" class="form-input">
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" onclick="document.getElementById('edit-post-modal').classList.remove('active')">Cancel</button>
+          <button type="submit" class="btn btn-primary">Save Changes</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-bottom-nav">
+    <a href="dashboard.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📊</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="instagram.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📸</span>
+      <span>Instagram</span>
+    </a>
+    <a href="feed.html" class="mobile-nav-item active">
+      <span class="mobile-nav-icon">📰</span>
+      <span>Feed</span>
+    </a>
+    <a href="algorithm-studio.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">🎛️</span>
+      <span>Studio</span>
+    </a>
+    <a href="profile.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { initFeedPage } from "./js/feed.js";
+    import { logoutUser } from "./js/auth.js";
+    import { markAllNotificationsAsRead } from "./js/notifications.js";
+
+    document.getElementById("btn-sidebar-logout").addEventListener("click", () => logoutUser());
+
+    const notifBtn = document.getElementById("btn-toggle-notifs");
+    const notifDropdown = document.getElementById("navbar-notif-dropdown");
+    notifBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      notifDropdown.classList.toggle("active");
+    });
+    document.addEventListener("click", () => notifDropdown.classList.remove("active"));
+
+    document.getElementById("btn-mark-all-read").addEventListener("click", async () => {
+      await markAllNotificationsAsRead();
+    });
+
+    initFeedPage();
+  </script>
+</body>
+</html>

@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Main Dashboard - Recommendation-Ranked Social Feed Studio.">
+  <title>Dashboard | Recommendation Studio</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/dashboard.css">
+  <link rel="stylesheet" href="css/instagram.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Desktop Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">⚡</div>
+        <div class="sidebar-brand">
+          <h1>RecStudio</h1>
+          <span>Algorithm Studio</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item active">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="instagram.html" class="nav-item">
+          <span class="nav-icon">📸</span>
+          <span>Instagram API</span>
+        </a>
+        <a href="feed.html" class="nav-item">
+          <span class="nav-icon">📰</span>
+          <span>Social Feed</span>
+        </a>
+        <a href="algorithm-studio.html" class="nav-item">
+          <span class="nav-icon">🎛️</span>
+          <span>Algorithm Studio</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <span class="nav-icon">📈</span>
+          <span>Analytics</span>
+        </a>
+        <a href="explore.html" class="nav-item">
+          <span class="nav-icon">🧭</span>
+          <span>Explore</span>
+        </a>
+        <a href="saved-posts.html" class="nav-item">
+          <span class="nav-icon">🔖</span>
+          <span>Saved Posts</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <span class="nav-icon">👤</span>
+          <span>My Profile</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <span class="nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="profile.html" class="user-mini-profile">
+          <img src="" alt="Avatar" class="avatar-sm auth-user-avatar">
+          <div class="user-mini-meta">
+            <strong class="auth-user-name">Loading...</strong>
+            <span>View profile</span>
+          </div>
+        </a>
+        <button type="button" class="btn-icon" id="btn-sidebar-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content Wrapper -->
+    <div class="main-wrapper">
+      <!-- App Header -->
+      <header class="app-header">
+        <div class="header-left">
+          <h2 class="page-title">Platform Dashboard</h2>
+        </div>
+
+        <div class="header-actions">
+          <!-- Notification Bell -->
+          <div class="notif-wrapper" id="navbar-notif-container">
+            <button type="button" class="btn-notif-bell" id="btn-toggle-notifs" aria-label="Notifications">
+              🔔
+              <span class="notif-badge" id="navbar-notif-badge" style="display: none;">0</span>
+            </button>
+            <div class="notif-dropdown" id="navbar-notif-dropdown">
+              <div class="notif-header">
+                <span>Notifications</span>
+                <button type="button" class="btn btn-xs btn-outline" id="btn-mark-all-read">Mark all read</button>
+              </div>
+              <div class="notif-list" id="navbar-notif-list">
+                <div class="notif-empty">No notifications yet</div>
+              </div>
+            </div>
+          </div>
+
+          <a href="instagram.html" class="btn btn-outline btn-sm">📸 Instagram Hub</a>
+          <a href="feed.html" class="btn btn-primary btn-sm">+ Go to Feed</a>
+        </div>
+      </header>
+
+      <!-- Dashboard Body -->
+      <main class="dashboard-container">
+        <!-- Hero Welcome & Account Info -->
+        <section class="dashboard-hero" style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1.5rem; margin-bottom: 2rem;">
+          <div style="display: flex; align-items: center; gap: 1.25rem;">
+            <img src="" alt="Avatar" class="avatar-lg auth-user-avatar" id="dash-user-avatar" style="width: 64px; height: 64px; border-radius: 50%; object-fit: cover; border: 3px solid var(--border-subtle); box-shadow: var(--shadow-sm);">
+            <div>
+              <div style="display: flex; align-items: center; gap: 0.5rem; flex-wrap: wrap;">
+                <h2 style="margin: 0; font-size: 1.5rem;">Welcome back, <span id="dashboard-welcome-name">Creator</span> 👋</h2>
+                <span id="dash-email-status-badge" class="badge-warning" style="font-size: 0.72rem; padding: 0.2rem 0.55rem; border-radius: var(--radius-full); font-weight: 700;">● Email Unverified</span>
+              </div>
+              <p style="margin: 0.3rem 0 0 0; color: var(--text-muted); font-size: 0.88rem;">
+                <span id="dashboard-welcome-username" style="font-weight: 700; color: var(--primary);">@creator</span> • 
+                <span id="dashboard-welcome-email" style="font-family: var(--font-mono); font-size: 0.8rem;">email@example.com</span>
+              </p>
+            </div>
+          </div>
+          <div class="hero-quick-actions">
+            <a href="instagram.html" class="btn btn-outline">📸 Manage Instagram</a>
+            <a href="algorithm-studio.html" class="btn btn-outline">🎛️ Adjust Algorithm</a>
+            <a href="feed.html" class="btn btn-primary">📰 Open Feed</a>
+          </div>
+        </section>
+
+        <!-- Instagram Live Integration Overview Banner -->
+        <section class="ig-status-card" style="padding: 1.25rem 1.5rem; margin-bottom: 2rem;">
+          <div style="display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 1rem;">
+            <div style="display: flex; align-items: center; gap: 1rem;">
+              <div class="ig-avatar-badge" style="width: 48px; height: 48px;">
+                <span style="font-size: 1.3rem;">📸</span>
+              </div>
+              <div>
+                <strong style="font-size: 1.05rem;" id="dash-ig-status-title">Instagram Connection: Disconnected</strong>
+                <p style="font-size: 0.82rem; color: var(--text-muted);" id="dash-ig-status-desc">
+                  Connect your Instagram Professional account to rank your real Instagram media alongside community content.
+                </p>
+              </div>
+            </div>
+            <div>
+              <a href="instagram.html" class="btn btn-instagram-connect btn-sm" id="dash-ig-action-btn">
+                Connect Account
+              </a>
+            </div>
+          </div>
+        </section>
+
+        <!-- Real Metrics KPI Grid -->
+        <section class="stats-grid">
+          <div class="stat-card">
+            <div class="stat-icon-wrapper" style="color: #e1306c;">📸</div>
+            <div class="stat-meta">
+              <strong id="stat-imported-ig-posts">0</strong>
+              <span>Real Instagram Posts</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrapper" style="color: var(--primary);">📝</div>
+            <div class="stat-meta">
+              <strong id="stat-total-posts">0</strong>
+              <span>Community Posts</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrapper" style="color: #e11d48;">❤️</div>
+            <div class="stat-meta">
+              <strong id="stat-likes-received">0</strong>
+              <span>Community Likes</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrapper" style="color: var(--color-affinity);">👥</div>
+            <div class="stat-meta">
+              <strong id="stat-following-count">0</strong>
+              <span>Following (In-App)</span>
+            </div>
+          </div>
+
+          <div class="stat-card">
+            <div class="stat-icon-wrapper" style="color: #0284c7;">⚡</div>
+            <div class="stat-meta">
+              <strong id="stat-avg-likes">0</strong>
+              <span>Avg Actions / Post</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Algorithm Status & Quick Summary -->
+        <section class="algo-status-banner">
+          <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.5rem; flex-wrap: wrap; gap: 0.5rem;">
+            <strong>Active Recommendation Model Weights</strong>
+            <a href="algorithm-studio.html" class="btn btn-xs btn-outline">Fine-tune Weights ➔</a>
+          </div>
+
+          <div class="formula-visual-bar" id="dash-formula-bar" style="margin-bottom: 0.85rem;">
+            <!-- Rendered by JS -->
+          </div>
+
+          <div class="algo-status-tags">
+            <span class="tag-badge tag-r">Recency Weight: <strong id="dash-weight-recency">35%</strong></span>
+            <span class="tag-badge tag-e">Engagement Weight: <strong id="dash-weight-engagement">35%</strong></span>
+            <span class="tag-badge tag-a">Affinity Weight: <strong id="dash-weight-affinity">30%</strong></span>
+          </div>
+        </section>
+
+        <!-- Dual Grid: Trending Posts & Recent Activity -->
+        <div class="dashboard-grid-layout">
+          <!-- Trending Posts Panel -->
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3>🔥 High-Engagement Trending Posts</h3>
+              <a href="explore.html" class="btn btn-xs btn-outline">Explore More</a>
+            </div>
+            <div id="dash-trending-posts">
+              <p class="loading-subtext">Calculating engagement velocity...</p>
+            </div>
+          </div>
+
+          <!-- Recent Activity Feed -->
+          <div class="dash-panel">
+            <div class="panel-header">
+              <h3>⚡ Platform Activity</h3>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Real interactions</span>
+            </div>
+            <div id="dash-recent-activity">
+              <p class="loading-subtext">Loading recent activities...</p>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-bottom-nav">
+    <a href="dashboard.html" class="mobile-nav-item active">
+      <span class="mobile-nav-icon">📊</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="instagram.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📸</span>
+      <span>Instagram</span>
+    </a>
+    <a href="feed.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📰</span>
+      <span>Feed</span>
+    </a>
+    <a href="algorithm-studio.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">🎛️</span>
+      <span>Studio</span>
+    </a>
+    <a href="profile.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { initDashboardPage } from "./js/dashboard.js";
+    import { logoutUser } from "./js/auth.js";
+    import { markAllNotificationsAsRead } from "./js/notifications.js";
+
+    document.getElementById("btn-sidebar-logout").addEventListener("click", () => logoutUser());
+
+    const notifBtn = document.getElementById("btn-toggle-notifs");
+    const notifDropdown = document.getElementById("navbar-notif-dropdown");
+    notifBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      notifDropdown.classList.toggle("active");
+    });
+    document.addEventListener("click", () => notifDropdown.classList.remove("active"));
+
+    document.getElementById("btn-mark-all-read").addEventListener("click", async () => {
+      await markAllNotificationsAsRead();
+    });
+
+    initDashboardPage();
+  </script>
+</body>
+</html>

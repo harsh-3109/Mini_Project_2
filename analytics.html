@@ -1,0 +1,286 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Visual Analytics Dashboard for Recommendation-Ranked Social Feed Studio.">
+  <title>Analytics | Recommendation Studio</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/analytics.css">
+  <link rel="stylesheet" href="css/instagram.css">
+  <link rel="stylesheet" href="css/responsive.css">
+
+  <style>
+    .analytics-section-title {
+      font-size: 1.25rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+      display: flex;
+      align-items: center;
+      gap: 0.5rem;
+    }
+  </style>
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">⚡</div>
+        <div class="sidebar-brand">
+          <h1>RecStudio</h1>
+          <span>Algorithm Studio</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="instagram.html" class="nav-item">
+          <span class="nav-icon">📸</span>
+          <span>Instagram API</span>
+        </a>
+        <a href="feed.html" class="nav-item">
+          <span class="nav-icon">📰</span>
+          <span>Social Feed</span>
+        </a>
+        <a href="algorithm-studio.html" class="nav-item">
+          <span class="nav-icon">🎛️</span>
+          <span>Algorithm Studio</span>
+        </a>
+        <a href="analytics.html" class="nav-item active">
+          <span class="nav-icon">📈</span>
+          <span>Analytics</span>
+        </a>
+        <a href="explore.html" class="nav-item">
+          <span class="nav-icon">🧭</span>
+          <span>Explore</span>
+        </a>
+        <a href="saved-posts.html" class="nav-item">
+          <span class="nav-icon">🔖</span>
+          <span>Saved Posts</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <span class="nav-icon">👤</span>
+          <span>My Profile</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <span class="nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="profile.html" class="user-mini-profile">
+          <img src="" alt="Avatar" class="avatar-sm auth-user-avatar">
+          <div class="user-mini-meta">
+            <strong class="auth-user-name">Loading...</strong>
+            <span>View profile</span>
+          </div>
+        </a>
+        <button type="button" class="btn-icon" id="btn-sidebar-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+      <header class="app-header">
+        <div class="header-left">
+          <h2 class="page-title">Feed Analytics & Statistical Distributions</h2>
+        </div>
+
+        <div class="header-actions">
+          <div class="notif-wrapper" id="navbar-notif-container">
+            <button type="button" class="btn-notif-bell" id="btn-toggle-notifs" aria-label="Notifications">
+              🔔
+              <span class="notif-badge" id="navbar-notif-badge" style="display: none;">0</span>
+            </button>
+            <div class="notif-dropdown" id="navbar-notif-dropdown">
+              <div class="notif-header">
+                <span>Notifications</span>
+                <button type="button" class="btn btn-xs btn-outline" id="btn-mark-all-read">Mark all read</button>
+              </div>
+              <div class="notif-list" id="navbar-notif-list">
+                <div class="notif-empty">No notifications yet</div>
+              </div>
+            </div>
+          </div>
+
+          <a href="algorithm-studio.html" class="btn btn-outline btn-sm">🎛️ Adjust Weights</a>
+        </div>
+      </header>
+
+      <main class="analytics-container">
+        <div class="analytics-header">
+          <h2>Algorithmic Performance & Real Data Distributions</h2>
+          <p>Statistical insights rendered strictly using native Canvas and SVG primitives from authentic database records.</p>
+        </div>
+
+        <!-- Real Instagram Imported Analytics Section -->
+        <section style="margin-bottom: 2.5rem;">
+          <h3 class="analytics-section-title">📸 Connected Instagram Media Metrics</h3>
+          
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <span class="kpi-title">Imported Instagram Posts</span>
+              <span class="kpi-value" id="kpi-ig-total-posts">0</span>
+              <span class="kpi-subtitle">Synced via Meta Graph API</span>
+            </div>
+
+            <div class="kpi-card">
+              <span class="kpi-title">Total Instagram Likes</span>
+              <span class="kpi-value" id="kpi-ig-total-likes" style="color:#e11d48;">0</span>
+              <span class="kpi-subtitle">Actual verified post likes</span>
+            </div>
+
+            <div class="kpi-card">
+              <span class="kpi-title">Total Instagram Comments</span>
+              <span class="kpi-value" id="kpi-ig-total-comments" style="color:var(--color-engagement);">0</span>
+              <span class="kpi-subtitle">Actual conversation count</span>
+            </div>
+
+            <div class="kpi-card">
+              <span class="kpi-title">Average Media Engagement</span>
+              <span class="kpi-value" id="kpi-ig-avg-engagement">0.0</span>
+              <span class="kpi-subtitle">Likes + comments / post</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Algorithmic Score KPIs -->
+        <section style="margin-bottom: 2rem;">
+          <h3 class="analytics-section-title">📊 Multi-Signal Recommendation Metrics</h3>
+          <div class="kpi-grid">
+            <div class="kpi-card">
+              <span class="kpi-title">Highest Ranking Score</span>
+              <span class="kpi-value" id="kpi-top-score">--</span>
+              <span class="kpi-subtitle">Top-ranked item</span>
+            </div>
+
+            <div class="kpi-card">
+              <span class="kpi-title">Average Composite Score</span>
+              <span class="kpi-value" id="kpi-avg-score">--</span>
+              <span class="kpi-subtitle">Across active post corpus</span>
+            </div>
+
+            <div class="kpi-card">
+              <span class="kpi-title">Mean Recency Signal</span>
+              <span class="kpi-value" id="kpi-avg-recency" style="color: var(--color-recency);">--</span>
+              <span class="kpi-subtitle">Freshness decay metric</span>
+            </div>
+
+            <div class="kpi-card">
+              <span class="kpi-title">Mean Engagement Signal</span>
+              <span class="kpi-value" id="kpi-avg-engagement" style="color: var(--color-engagement);">--</span>
+              <span class="kpi-subtitle">Normalized virality metric</span>
+            </div>
+          </div>
+        </section>
+
+        <!-- Charts Grid -->
+        <div class="charts-grid">
+          <!-- Top Posts Bar Chart -->
+          <div class="chart-panel">
+            <div class="chart-panel-header">
+              <h3>Top 7 Posts by Composite Recommendation Score</h3>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Canvas 2D</span>
+            </div>
+            <div class="canvas-wrapper">
+              <canvas id="chart-top-posts" width="620" height="280"></canvas>
+            </div>
+          </div>
+
+          <!-- Signal Contribution Doughnut Chart (SVG) -->
+          <div class="chart-panel">
+            <div class="chart-panel-header">
+              <h3>Signal Contribution Share</h3>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Native SVG</span>
+            </div>
+            <div id="chart-doughnut-container">
+              <!-- Rendered by SVG -->
+            </div>
+          </div>
+
+          <!-- Media Type Distribution Chart -->
+          <div class="chart-panel">
+            <div class="chart-panel-header">
+              <h3>Instagram Media Type Distribution</h3>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Images vs Videos vs Carousels</span>
+            </div>
+            <div id="chart-media-type-container">
+              <!-- Rendered by SVG -->
+            </div>
+          </div>
+
+          <!-- Score Distribution Histogram -->
+          <div class="chart-panel">
+            <div class="chart-panel-header">
+              <h3>Score Distribution Across Posts (Histogram)</h3>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Buckets: 0-20 to 81-100</span>
+            </div>
+            <div class="canvas-wrapper">
+              <canvas id="chart-score-dist" width="460" height="240"></canvas>
+            </div>
+          </div>
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-bottom-nav">
+    <a href="dashboard.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📊</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="instagram.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📸</span>
+      <span>Instagram</span>
+    </a>
+    <a href="feed.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📰</span>
+      <span>Feed</span>
+    </a>
+    <a href="algorithm-studio.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">🎛️</span>
+      <span>Studio</span>
+    </a>
+    <a href="profile.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { initAnalyticsPage } from "./js/analytics.js";
+    import { logoutUser } from "./js/auth.js";
+    import { markAllNotificationsAsRead } from "./js/notifications.js";
+
+    document.getElementById("btn-sidebar-logout").addEventListener("click", () => logoutUser());
+
+    const notifBtn = document.getElementById("btn-toggle-notifs");
+    const notifDropdown = document.getElementById("navbar-notif-dropdown");
+    notifBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      notifDropdown.classList.toggle("active");
+    });
+    document.addEventListener("click", () => notifDropdown.classList.remove("active"));
+
+    document.getElementById("btn-mark-all-read").addEventListener("click", async () => {
+      await markAllNotificationsAsRead();
+    });
+
+    initAnalyticsPage();
+  </script>
+</body>
+</html>

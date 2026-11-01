@@ -1,0 +1,168 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // Helper functions
+    function isAuthenticated() {
+      return request.auth != null;
+    }
+
+    function isOwner(userId) {
+      return isAuthenticated() && request.auth.uid == userId;
+    }
+
+    function isValidString(val, minLen, maxLen) {
+      return val is string && val.size() >= minLen && val.size() <= maxLen;
+    }
+
+    // 1. Users collection
+    match /users/{userId} {
+      allow read: if true; // Public creator profiles
+      allow create: if isOwner(userId)
+                    && (
+                      ('fullName' in request.resource.data && isValidString(request.resource.data.fullName, 2, 80)) ||
+                      ('name' in request.resource.data && isValidString(request.resource.data.name, 2, 80))
+                    )
+                    && isValidString(request.resource.data.username, 3, 40)
+                    && request.resource.data.email is string;
+      allow update: if isOwner(userId)
+                    && (!('email' in request.resource.data) || request.resource.data.email == resource.data.email);
+      allow delete: if false; // Disallow accidental user document deletion
+    }
+
+    // 2. Posts collection
+    match /posts/{postId} {
+      allow read: if true; // Public social feed
+      allow create: if isAuthenticated()
+                    && request.resource.data.authorId == request.auth.uid
+                    && isValidString(request.resource.data.content, 1, 2000)
+                    && request.resource.data.likesCount >= 0
+                    && request.resource.data.commentsCount >= 0
+                    && request.resource.data.sharesCount >= 0;
+      allow update: if isAuthenticated() && (
+                      // Case A: Post author updating post content or media
+                      (request.auth.uid == resource.data.authorId && request.resource.data.authorId == resource.data.authorId)
+                      ||
+                      // Case B: Atomic increment/decrement of counters by interacting users
+                      (request.resource.data.diff(resource.data).affectedKeys().hasOnly(['likesCount', 'commentsCount', 'sharesCount']))
+                    );
+      allow delete: if isAuthenticated() && request.auth.uid == resource.data.authorId;
+    }
+
+    // 3. Comments collection
+    match /comments/{commentId} {
+      allow read: if true;
+      allow create: if isAuthenticated()
+                    && request.resource.data.authorId == request.auth.uid
+                    && isValidString(request.resource.data.commentText, 1, 1000)
+                    && request.resource.data.postId is string;
+      allow update: if isAuthenticated()
+                    && request.auth.uid == resource.data.authorId
+                    && isValidString(request.resource.data.commentText, 1, 1000);
+      allow delete: if isAuthenticated() && request.auth.uid == resource.data.authorId;
+    }
+
+    // 4. Likes collection
+    match /likes/{likeId} {
+      allow read: if true;
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.postId is string;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow update: if false; // Likes are immutable (either created or deleted)
+    }
+
+    // 5. Follows collection
+    match /follows/{followId} {
+      allow read: if true;
+      allow create: if isAuthenticated()
+                    && request.resource.data.followerId == request.auth.uid
+                    && request.resource.data.followingId != request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.followerId == request.auth.uid;
+      allow update: if false;
+    }
+
+    // 6. Saved Posts collection
+    match /savedPosts/{saveId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow update: if false;
+    }
+
+    // 7. Notifications collection
+    match /notifications/{notifId} {
+      allow read: if isAuthenticated() && resource.data.recipientId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.senderId == request.auth.uid
+                    && request.resource.data.recipientId != request.auth.uid;
+      allow update: if isAuthenticated()
+                    && resource.data.recipientId == request.auth.uid
+                    && request.resource.data.diff(resource.data).affectedKeys().hasOnly(['isRead']);
+      allow delete: if isAuthenticated() && resource.data.recipientId == request.auth.uid;
+    }
+
+    // 8. Algorithm Settings collection
+    match /algorithmSettings/{settingId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated()
+                    && request.resource.data.userId == request.auth.uid
+                    && request.resource.data.recencyWeight >= 0
+                    && request.resource.data.engagementWeight >= 0
+                    && request.resource.data.affinityWeight >= 0
+                    && (request.resource.data.recencyWeight + request.resource.data.engagementWeight + request.resource.data.affinityWeight == 100);
+      allow update: if isAuthenticated()
+                    && resource.data.userId == request.auth.uid
+                    && (request.resource.data.recencyWeight + request.resource.data.engagementWeight + request.resource.data.affinityWeight == 100);
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // 9. User Interactions collection
+    match /userInteractions/{interactionId} {
+      allow read: if isAuthenticated() && resource.data.userId == request.auth.uid;
+      allow create: if isAuthenticated() && request.resource.data.userId == request.auth.uid;
+      allow update: if false;
+      allow delete: if isAuthenticated() && resource.data.userId == request.auth.uid;
+    }
+
+    // ========================================================
+    // 10. REAL INSTAGRAM INTEGRATION COLLECTIONS
+    // ========================================================
+
+    // Instagram connection status & metadata (public/owner read, server-only write)
+    match /instagramConnections/{userId} {
+      // User can only view their own connection status metadata
+      allow read: if isOwner(userId);
+      // Client writes strictly FORBIDDEN: Connection state is modified exclusively
+      // by verified Firebase Cloud Functions (Admin SDK) to prevent spoofing
+      allow write: if false;
+    }
+
+    // Instagram OAuth access tokens (CRITICAL SECURITY)
+    // Server-only access via Admin SDK. Clients NEVER have direct access.
+    match /instagramTokens/{userId} {
+      allow read, write: if false;
+    }
+
+    // Imported real Instagram Media
+    // Prevents clients from injecting fake or modified Instagram posts
+    match /instagramMedia/{mediaDocId} {
+      // Authenticated owners can query and read their own imported Instagram media
+      allow read: if isAuthenticated() && resource.data.ownerUserId == request.auth.uid;
+      // Client writes strictly FORBIDDEN: Only Cloud Functions can insert or update imported media
+      allow write: if false;
+    }
+
+    // Instagram Insights & Metrics
+    match /instagramInsights/{insightDocId} {
+      allow read: if isAuthenticated() && resource.data.ownerUserId == request.auth.uid;
+      allow write: if false; // Server-only ingestion from official Meta Graph API
+    }
+
+    // OAuth state tokens for CSRF protection during Instagram authorization flow
+    match /oauthStates/{stateToken} {
+      // Server-only creation and verification via Firebase Cloud Functions
+      allow read, write: if false;
+    }
+  }
+}

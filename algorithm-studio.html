@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Recommendation Algorithm Studio - Interactively adjust ranking weights and compare recommendation models side-by-side.">
+  <title>Algorithm Studio | Recommendation Studio</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/algorithm.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body>
+
+  <div class="app-container">
+    <!-- Sidebar -->
+    <aside class="sidebar">
+      <div class="sidebar-header">
+        <div class="sidebar-logo">⚡</div>
+        <div class="sidebar-brand">
+          <h1>RecStudio</h1>
+          <span>Algorithm Studio</span>
+        </div>
+      </div>
+
+      <nav class="sidebar-nav">
+        <a href="dashboard.html" class="nav-item">
+          <span class="nav-icon">📊</span>
+          <span>Dashboard</span>
+        </a>
+        <a href="feed.html" class="nav-item">
+          <span class="nav-icon">📰</span>
+          <span>Social Feed</span>
+        </a>
+        <a href="instagram.html" class="nav-item">
+          <span class="nav-icon">📸</span>
+          <span>Instagram</span>
+        </a>
+        <a href="algorithm-studio.html" class="nav-item active">
+          <span class="nav-icon">🎛️</span>
+          <span>Algorithm Studio</span>
+        </a>
+        <a href="analytics.html" class="nav-item">
+          <span class="nav-icon">📈</span>
+          <span>Analytics</span>
+        </a>
+        <a href="explore.html" class="nav-item">
+          <span class="nav-icon">🧭</span>
+          <span>Explore</span>
+        </a>
+        <a href="saved-posts.html" class="nav-item">
+          <span class="nav-icon">🔖</span>
+          <span>Saved Posts</span>
+        </a>
+        <a href="profile.html" class="nav-item">
+          <span class="nav-icon">👤</span>
+          <span>My Profile</span>
+        </a>
+        <a href="settings.html" class="nav-item">
+          <span class="nav-icon">⚙️</span>
+          <span>Settings</span>
+        </a>
+      </nav>
+
+      <div class="sidebar-footer">
+        <a href="profile.html" class="user-mini-profile">
+          <img src="" alt="Avatar" class="avatar-sm auth-user-avatar">
+          <div class="user-mini-meta">
+            <strong class="auth-user-name">Loading...</strong>
+            <span>View profile</span>
+          </div>
+        </a>
+        <button type="button" class="btn-icon" id="btn-sidebar-logout" title="Sign Out">🚪</button>
+      </div>
+    </aside>
+
+    <!-- Main Content -->
+    <div class="main-wrapper">
+      <header class="app-header">
+        <div class="header-left">
+          <h2 class="page-title">Recommendation Algorithm Studio</h2>
+        </div>
+
+        <div class="header-actions">
+          <div class="notif-wrapper" id="navbar-notif-container">
+            <button type="button" class="btn-notif-bell" id="btn-toggle-notifs" aria-label="Notifications">
+              🔔
+              <span class="notif-badge" id="navbar-notif-badge" style="display: none;">0</span>
+            </button>
+            <div class="notif-dropdown" id="navbar-notif-dropdown">
+              <div class="notif-header">
+                <span>Notifications</span>
+                <button type="button" class="btn btn-xs btn-outline" id="btn-mark-all-read">Mark all read</button>
+              </div>
+              <div class="notif-list" id="navbar-notif-list">
+                <div class="notif-empty">No notifications yet</div>
+              </div>
+            </div>
+          </div>
+
+          <button type="button" class="btn btn-primary btn-sm" id="btn-apply-algorithm">
+            Apply Configuration
+          </button>
+        </div>
+      </header>
+
+      <main class="studio-container">
+        <!-- Interactive Weight Studio Grid -->
+        <div class="studio-grid">
+          <!-- Control Panel -->
+          <div class="studio-panel">
+            <h3>Algorithm Weights Control</h3>
+            <p class="studio-subtitle">Adjust the contribution of each signal. Sliders dynamically auto-balance to guarantee exactly 100% total.</p>
+
+            <!-- Live Stacked Formula Segment Bar -->
+            <div class="formula-visual-bar" id="formula-visual-bar">
+              <!-- Rendered by JS -->
+            </div>
+
+            <!-- Recency Slider -->
+            <div class="slider-group">
+              <div class="slider-label-row">
+                <span class="slider-name" style="color: var(--color-recency);">⏳ Recency Score Weight</span>
+                <span class="slider-val val-recency" id="val-recency">35%</span>
+              </div>
+              <input type="range" min="0" max="100" value="35" class="algo-slider" id="slider-recency">
+            </div>
+
+            <!-- Engagement Slider -->
+            <div class="slider-group">
+              <div class="slider-label-row">
+                <span class="slider-name" style="color: var(--color-engagement);">🔥 Engagement Score Weight</span>
+                <span class="slider-val val-engagement" id="val-engagement">35%</span>
+              </div>
+              <input type="range" min="0" max="100" value="35" class="algo-slider" id="slider-engagement">
+            </div>
+
+            <!-- Affinity Slider -->
+            <div class="slider-group">
+              <div class="slider-label-row">
+                <span class="slider-name" style="color: var(--color-affinity);">🤝 Affinity Score Weight</span>
+                <span class="slider-val val-affinity" id="val-affinity">30%</span>
+              </div>
+              <input type="range" min="0" max="100" value="30" class="algo-slider" id="slider-affinity">
+            </div>
+
+            <!-- Total Sum Status Bar -->
+            <div class="sum-status-bar">
+              <span style="font-size: 0.85rem; font-weight: 600;">Total Enforced Weight:</span>
+              <span class="val-sum-valid" id="val-total-sum">100%</span>
+            </div>
+
+            <!-- Studio Buttons -->
+            <div class="studio-actions-row">
+              <button type="button" class="btn btn-primary" id="btn-apply-algorithm" style="flex: 1;">Apply to Active Feed</button>
+              <button type="button" class="btn btn-outline" id="btn-reset-algorithm">Reset Default</button>
+            </div>
+
+            <!-- Predefined Presets -->
+            <h4 style="font-size: 0.95rem; font-weight: 800; margin-bottom: 0.75rem;">Predefined Configurations</h4>
+            <div class="preset-buttons-grid" id="preset-buttons-container">
+              <!-- Rendered by JS -->
+            </div>
+
+            <!-- Custom Presets Manager -->
+            <h4 style="font-size: 0.95rem; font-weight: 800; margin: 1.5rem 0 0.5rem 0;">Save Custom Configuration</h4>
+            <form id="save-preset-form" style="display: flex; gap: 0.5rem; margin-bottom: 1rem;">
+              <input type="text" id="custom-preset-name" class="form-input" placeholder="e.g. My Research Model" required>
+              <button type="submit" class="btn btn-outline btn-sm">Save</button>
+            </form>
+            <div id="custom-presets-list">
+              <!-- Rendered by JS -->
+            </div>
+          </div>
+
+          <!-- Live Ranking Preview -->
+          <div class="studio-panel">
+            <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 0.35rem;">
+              <h3>Live Ranking Preview</h3>
+              <span style="font-size: 0.75rem; color: var(--text-muted);">Real-time score recalculation</span>
+            </div>
+            <p class="studio-subtitle">Observe how posts reposition instantly as you tune the sliders.</p>
+
+            <div class="studio-preview-list" id="studio-live-preview-list">
+              <div class="loading-spinner-container">
+                <div class="spinner"></div>
+                <p>Calculating live rank order...</p>
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <!-- MODULE 11: Side-by-Side Algorithm Comparison -->
+        <section class="comparison-section">
+          <div class="comp-header">
+            <h3>⚖️ Side-by-Side Algorithm Comparison</h3>
+            <p style="color: var(--text-muted); font-size: 0.92rem;">
+              Compare two different recommendation philosophies to observe how different mathematical weights impact content reach and creator visibility.
+            </p>
+          </div>
+
+          <div class="comp-controls-row">
+            <div>
+              <label for="comp-select-a" class="form-label">Configuration A (Baseline)</label>
+              <select id="comp-select-a" class="form-select">
+                <option value="chronological" selected>Chronological (Recency 80%, Engagement 10%, Affinity 10%)</option>
+                <option value="balanced">Balanced Discovery (Recency 35%, Engagement 35%, Affinity 30%)</option>
+                <option value="popularity">Viral Popularity (Recency 15%, Engagement 75%, Affinity 10%)</option>
+                <option value="personalized">Close Connections (Recency 20%, Engagement 20%, Affinity 60%)</option>
+              </select>
+            </div>
+
+            <div>
+              <label for="comp-select-b" class="form-label">Configuration B (Comparison Target)</label>
+              <select id="comp-select-b" class="form-select">
+                <option value="popularity" selected>Viral Popularity (Recency 15%, Engagement 75%, Affinity 10%)</option>
+                <option value="chronological">Chronological (Recency 80%, Engagement 10%, Affinity 10%)</option>
+                <option value="balanced">Balanced Discovery (Recency 35%, Engagement 35%, Affinity 30%)</option>
+                <option value="personalized">Close Connections (Recency 20%, Engagement 20%, Affinity 60%)</option>
+              </select>
+            </div>
+          </div>
+
+          <!-- Dual Feed Columns -->
+          <div class="comp-dual-grid">
+            <div class="comp-column-wrapper">
+              <div class="comp-column-header">
+                <span>Feed under Model A</span>
+              </div>
+              <div id="comp-feed-a"></div>
+            </div>
+
+            <div class="comp-column-wrapper">
+              <div class="comp-column-header">
+                <span>Feed under Model B (with Rank Deltas)</span>
+              </div>
+              <div id="comp-feed-b"></div>
+            </div>
+          </div>
+
+          <!-- Explanation of Ranking Delta Shift -->
+          <div id="comp-diff-summary"></div>
+        </section>
+      </main>
+    </div>
+  </div>
+
+  <!-- Mobile Bottom Nav -->
+  <nav class="mobile-bottom-nav">
+    <a href="dashboard.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📊</span>
+      <span>Dashboard</span>
+    </a>
+    <a href="feed.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📰</span>
+      <span>Feed</span>
+    </a>
+    <a href="algorithm-studio.html" class="mobile-nav-item active">
+      <span class="mobile-nav-icon">🎛️</span>
+      <span>Studio</span>
+    </a>
+    <a href="analytics.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">📈</span>
+      <span>Analytics</span>
+    </a>
+    <a href="profile.html" class="mobile-nav-item">
+      <span class="mobile-nav-icon">👤</span>
+      <span>Profile</span>
+    </a>
+  </nav>
+
+  <script type="module">
+    import { initAlgorithmStudioPage } from "./js/algorithm-studio.js";
+    import { logoutUser } from "./js/auth.js";
+    import { markAllNotificationsAsRead } from "./js/notifications.js";
+
+    document.getElementById("btn-sidebar-logout").addEventListener("click", () => logoutUser());
+
+    // Notification dropdown
+    const notifBtn = document.getElementById("btn-toggle-notifs");
+    const notifDropdown = document.getElementById("navbar-notif-dropdown");
+    notifBtn.addEventListener("click", (e) => {
+      e.stopPropagation();
+      notifDropdown.classList.toggle("active");
+    });
+    document.addEventListener("click", () => notifDropdown.classList.remove("active"));
+
+    document.getElementById("btn-mark-all-read").addEventListener("click", async () => {
+      await markAllNotificationsAsRead();
+    });
+
+    initAlgorithmStudioPage();
+  </script>
+</body>
+</html>

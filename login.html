@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="Log in to Recommendation-Ranked Social Feed Studio.">
+  <title>Sign In | Recommendation Studio</title>
+
+  <!-- Google Fonts -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="css/style.css">
+  <link rel="stylesheet" href="css/auth.css">
+  <link rel="stylesheet" href="css/responsive.css">
+</head>
+<body class="auth-page">
+
+  <main class="auth-card">
+    <header class="auth-header">
+      <div class="auth-logo-badge">⚡</div>
+      <h2>Welcome Back</h2>
+      <p>Sign in to explore your personalized recommendation feed</p>
+    </header>
+
+    <form id="login-form">
+      <div id="login-error-alert" style="display: none; padding: 0.75rem 1rem; border-radius: var(--radius-md); background: #fee2e2; border: 1px solid #f87171; color: #991b1b; font-size: 0.85rem; margin-bottom: 1.25rem;"></div>
+
+      <div class="form-group">
+        <label for="login-email" class="form-label">Email Address</label>
+        <input type="email" id="login-email" class="form-input" placeholder="name@example.com" required autocomplete="email">
+      </div>
+
+      <div class="form-group">
+        <label for="login-password" class="form-label">Password</label>
+        <div class="password-input-wrapper">
+          <input type="password" id="login-password" class="form-input" placeholder="••••••••" required autocomplete="current-password">
+          <button type="button" class="btn-toggle-password" id="btn-toggle-login-pass" aria-label="Toggle password visibility" title="Show/hide password">👁️</button>
+        </div>
+      </div>
+
+      <div class="auth-helper-row">
+        <label class="auth-remember">
+          <input type="checkbox" id="remember-me" checked>
+          <span>Remember session</span>
+        </label>
+        <button type="button" class="btn-link" id="btn-forgot-password" style="background:none; border:none; color:var(--primary); cursor:pointer; font-size:0.85rem;">Forgot password?</button>
+      </div>
+
+      <button type="submit" class="btn btn-primary" id="btn-submit-login" style="width: 100%; padding: 0.75rem;">
+        Sign In
+      </button>
+    </form>
+
+    <!-- Grader Quick-Fill Demo Personas -->
+    <div class="demo-accounts-card">
+      <h4>⚡ Quick-Fill Demo Account (1-Click)</h4>
+      <div class="demo-pills-row">
+        <button type="button" class="btn-demo-pill" data-email="maya.lin@technet.org">
+          👩‍🔬 Dr. Maya Lin (Researcher)
+        </button>
+        <button type="button" class="btn-demo-pill" data-email="alex.chen@fullstack.io">
+          👨‍💻 Alex Chen (Engineer)
+        </button>
+        <button type="button" class="btn-demo-pill" data-email="elena@designcraft.studio">
+          🎨 Elena Rostova (Designer)
+        </button>
+        <button type="button" class="btn-demo-pill" data-email="marcus@datalens.co">
+          📊 Marcus Vance (Data)
+        </button>
+        <button type="button" class="btn-demo-pill" data-email="sarah.patel@growthventures.vc">
+          🚀 Sarah Patel (Product)
+        </button>
+      </div>
+    </div>
+
+    <footer class="auth-footer">
+      Don't have an account yet? <a href="register.html">Create an account</a>
+    </footer>
+  </main>
+
+  <!-- Forgot Password Modal -->
+  <div class="modal-overlay" id="forgot-password-modal">
+    <div class="modal-card">
+      <div class="modal-header">
+        <h3>Reset Password</h3>
+        <button type="button" class="btn-icon" id="btn-close-forgot-modal">✕</button>
+      </div>
+      <form id="forgot-password-form">
+        <div class="modal-body">
+          <p style="font-size: 0.9rem; color: var(--text-muted); margin-bottom: 1rem;">
+            Enter your registered email address to receive password reset instructions.
+          </p>
+          <div class="form-group">
+            <label for="reset-email" class="form-label">Email Address</label>
+            <input type="email" id="reset-email" class="form-input" placeholder="name@example.com" required>
+          </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-outline" id="btn-cancel-forgot">Cancel</button>
+          <button type="submit" class="btn btn-primary">Send Reset Link</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <script type="module">
+    import { loginUser, sendPasswordReset, redirectIfAuthenticated, initAuth } from "./js/auth.js";
+    import { showToast, openModal, closeModal } from "./js/utils.js";
+
+    // Redirect to dashboard if user is already authenticated
+    await initAuth();
+    if (redirectIfAuthenticated("dashboard.html")) {
+      // redirected
+    }
+
+    // Toggle password visibility
+    const togglePassBtn = document.getElementById("btn-toggle-login-pass");
+    const passInput = document.getElementById("login-password");
+    if (togglePassBtn && passInput) {
+      togglePassBtn.addEventListener("click", () => {
+        const isPass = passInput.type === "password";
+        passInput.type = isPass ? "text" : "password";
+        togglePassBtn.textContent = isPass ? "🙈" : "👁️";
+      });
+    }
+
+    // Handle Login Submit
+    const form = document.getElementById("login-form");
+    const submitBtn = document.getElementById("btn-submit-login");
+    const errorAlert = document.getElementById("login-error-alert");
+
+    form.addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("login-email").value.trim();
+      const password = passInput.value;
+
+      if (errorAlert) errorAlert.style.display = "none";
+      submitBtn.disabled = true;
+      submitBtn.innerHTML = `<span class="spinner-sm"></span> Signing in...`;
+
+      try {
+        await loginUser(email, password);
+        const params = new URLSearchParams(window.location.search);
+        const redirect = params.get("redirect") || "dashboard.html";
+        window.location.href = redirect;
+      } catch (err) {
+        if (errorAlert) {
+          errorAlert.textContent = err.message;
+          errorAlert.style.display = "block";
+        }
+        showToast(err.message, "error");
+      } finally {
+        submitBtn.disabled = false;
+        submitBtn.textContent = "Sign In";
+      }
+    });
+
+    // Quick-Fill Demo Personas
+    document.querySelectorAll(".btn-demo-pill").forEach(btn => {
+      btn.addEventListener("click", () => {
+        const email = btn.getAttribute("data-email");
+        document.getElementById("login-email").value = email;
+        passInput.value = "demo123456";
+        if (errorAlert) errorAlert.style.display = "none";
+        showToast(`Filled credentials for ${email}`, "info");
+      });
+    });
+
+    // Forgot Password Handlers
+    document.getElementById("btn-forgot-password").addEventListener("click", () => openModal("forgot-password-modal"));
+    document.getElementById("btn-close-forgot-modal").addEventListener("click", () => closeModal("forgot-password-modal"));
+    document.getElementById("btn-cancel-forgot").addEventListener("click", () => closeModal("forgot-password-modal"));
+
+    document.getElementById("forgot-password-form").addEventListener("submit", async (e) => {
+      e.preventDefault();
+      const email = document.getElementById("reset-email").value.trim();
+      const forgotSubmitBtn = document.getElementById("btn-submit-forgot") || document.querySelector("#forgot-password-form button[type='submit']");
+      if (forgotSubmitBtn) {
+        forgotSubmitBtn.disabled = true;
+        forgotSubmitBtn.innerHTML = `<span class="spinner-sm"></span> Sending...`;
+      }
+      try {
+        await sendPasswordReset(email);
+        closeModal("forgot-password-modal");
+      } catch (err) {
+        showToast(err.message, "error");
+      } finally {
+        if (forgotSubmitBtn) {
+          forgotSubmitBtn.disabled = false;
+          forgotSubmitBtn.textContent = "Send Reset Link";
+        }
+      }
+    });
+  </script>
+</body>
+</html>
